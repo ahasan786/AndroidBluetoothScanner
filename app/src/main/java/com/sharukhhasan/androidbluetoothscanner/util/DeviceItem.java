@@ -1,36 +1,52 @@
 package com.sharukhhasan.androidbluetoothscanner.util;
 
+import java.util.UUID;
+
 /**
  * Created by sharukhhasan on 6/1/16.
  */
 public class DeviceItem {
     private String deviceName;
     private String address;
+    private UUID uuid;
     private boolean connected;
 
-    public String getDeviceName() {
+    public String getDeviceName()
+    {
         return deviceName;
     }
 
-    public boolean getConnected() {
+    public boolean getConnected()
+    {
         return connected;
     }
 
-    public String getAddress() {
+    public String getAddress()
+    {
         return address;
     }
 
-    public void setDeviceName(String deviceName) {
+    public void setDeviceName(String deviceName)
+    {
         this.deviceName = deviceName;
     }
 
-    public DeviceItem(String name, String address, String connected){
+    public UUID getUuid()
+    {
+        return uuid;
+    }
+
+    public DeviceItem(String name, String address, String connected)
+    {
         this.deviceName = name;
         this.address = address;
-        if (connected == "true") {
+
+        if(connected == "true")
+        {
             this.connected = true;
         }
-        else {
+        else
+        {
             this.connected = false;
         }
     }

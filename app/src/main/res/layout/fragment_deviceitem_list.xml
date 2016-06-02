@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,7 +12,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/title_devices"
-        android:textColor="#000"
+        android:textColor="@color/colorGray"
         android:textSize="60dp"
         android:id="@+id/textView"
         android:layout_gravity="center_horizontal|top"
@@ -22,6 +23,15 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#000"/>
+
+    <com.github.ybq.android.spinkit.SpinKitView
+        android:id="@+id/spin_kit"
+        style="@style/SpinKitView.Large.Circle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        app:SpinKit_Color="@color/colorOrange" />
+
     <ToggleButton
         android:layout_width="match_parent"
         android:layout_height="100dp"
@@ -34,8 +44,9 @@
         android:textOff="Scan"
         android:textOn="Scanning..." />
 
-    <ListView android:id="@android:id/list" android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
+    <ListView
+        android:id="@android:id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </LinearLayout>

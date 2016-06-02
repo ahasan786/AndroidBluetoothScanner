@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.ParcelUuid;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,27 +18,37 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
-import android.widget.ListAdapter;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.ToggleButton;
+import android.os.Parcelable;
 
+import com.github.ybq.android.spinkit.style.FadingCircle;
 import com.sharukhhasan.androidbluetoothscanner.util.DeviceItem;
 import com.sharukhhasan.androidbluetoothscanner.R;
 import com.sharukhhasan.androidbluetoothscanner.util.DeviceListAdapter;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * Created by sharukhhasan on 6/1/16.
  */
 public class DeviceListFragment extends Fragment implements AbsListView.OnItemClickListener{
+    public static final String UUIDTAG = "UUID";
     private ArrayList <DeviceItem>deviceItemList;
     private OnFragmentInteractionListener mListener;
     private static BluetoothAdapter bTAdapter;
     private AbsListView mListView;
     private ArrayAdapter<DeviceItem> mAdapter;
-    
+    private ParcelUuid[] uuids;
+    private ArrayList<UUID> uuidList;
+    private static Method getUuids;
+    private Parcelable[] uuidExtra;
+
     private final BroadcastReceiver bReciever = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent)
         {
@@ -46,6 +57,13 @@ public class DeviceListFragment extends Fragment implements AbsListView.OnItemCl
             {
                 Log.d("DEVICELIST", "Bluetooth device found\n");
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                uuidExtra = intent.getParcelableArrayExtra(BluetoothDevice.EXTRA_UUID);
+
+                if(!uuidExtra.equals(null))
+                {
+                    Log.d(UUIDTAG, uuidExtra.toString());
+                }
+
                 DeviceItem newDevice = new DeviceItem(device.getName(), device.getAddress(), "false");
                 mAdapter.add(newDevice);
                 mAdapter.notifyDataSetChanged();
@@ -57,6 +75,11 @@ public class DeviceListFragment extends Fragment implements AbsListView.OnItemCl
     {
         DeviceListFragment fragment = new DeviceListFragment();
         bTAdapter = adapter;
+        try {
+            getUuids = BluetoothAdapter.class.getDeclaredMethod("getUuids", null);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
         return fragment;
     }
 
@@ -69,6 +92,7 @@ public class DeviceListFragment extends Fragment implements AbsListView.OnItemCl
 
         Log.d("DEVICELIST", "Super called for DeviceListFragment onCreate\n");
         deviceItemList = new ArrayList<DeviceItem>();
+        uuidList = new ArrayList<UUID>();
 
         Set<BluetoothDevice> pairedDevices = bTAdapter.getBondedDevices();
         if(pairedDevices.size() > 0)
@@ -85,6 +109,15 @@ public class DeviceListFragment extends Fragment implements AbsListView.OnItemCl
             deviceItemList.add(new DeviceItem("No Devices", "", "false"));
         }
 
+        try {
+            uuids = (ParcelUuid[])getUuids.invoke(bTAdapter, null);
+
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+
         Log.d("DEVICELIST", "DeviceList populated\n");
         mAdapter = new DeviceListAdapter(getActivity(), deviceItemList, bTAdapter);
         Log.d("DEVICELIST", "Adapter created\n");
@@ -95,6 +128,10 @@ public class DeviceListFragment extends Fragment implements AbsListView.OnItemCl
     {
         View view = inflater.inflate(R.layout.fragment_deviceitem_list, container, false);
         ToggleButton scan = (ToggleButton) view.findViewById(R.id.scan);
+        final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.spin_kit);
+        FadingCircle fadingCircle = new FadingCircle();
+        progressBar.setIndeterminateDrawable(fadingCircle);
+        progressBar.setVisibility(View.INVISIBLE);
 
         mListView = (AbsListView) view.findViewById(android.R.id.list);
         mListView.setAdapter(mAdapter);
@@ -106,9 +143,11 @@ public class DeviceListFragment extends Fragment implements AbsListView.OnItemCl
                 if (isChecked) {
                     mAdapter.clear();
                     getActivity().registerReceiver(bReciever, filter);
+                    progressBar.setVisibility(View.VISIBLE);
                     bTAdapter.startDiscovery();
                 } else {
                     getActivity().unregisterReceiver(bReciever);
+                    progressBar.setVisibility(View.INVISIBLE);
                     bTAdapter.cancelDiscovery();
                 }
             }
@@ -139,9 +178,8 @@ public class DeviceListFragment extends Fragment implements AbsListView.OnItemCl
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id)
     {
-
         Log.d("DEVICELIST", "onItemClick position: " + position + " id: " + id + " name: "
-                + deviceItemList.get(position).getDeviceName() + "\n");
+                + deviceItemList.get(position).getDeviceName() + " address: " + deviceItemList.get(position).getAddress() + "\n");
         if(null != mListener)
         {
             mListener.onFragmentInteraction(deviceItemList.get(position).getDeviceName());

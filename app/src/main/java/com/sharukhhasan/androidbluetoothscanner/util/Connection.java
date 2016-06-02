@@ -10,7 +10,7 @@ import java.util.UUID;
 /**
  * Created by sharukhhasan on 6/1/16.
  */
-public class Connection {
+public class Connection extends Thread {
     private final BluetoothDevice bTDevice;
     private final BluetoothSocket bTSocket;
 

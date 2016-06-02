@@ -19,7 +19,6 @@
         android:textAlignment="center"
         android:textSize="100px"
         android:textColor="#fff"
-        android:singleLine="true"
-        />
+        android:singleLine="true" />
 
 </LinearLayout>

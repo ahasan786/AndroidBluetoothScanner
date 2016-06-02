@@ -3,6 +3,7 @@ package com.sharukhhasan.androidbluetoothscanner.util;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.lang.reflect.Method;
 import java.util.List;
 
 import com.sharukhhasan.androidbluetoothscanner.R;
@@ -49,11 +51,11 @@ public class DeviceListAdapter extends ArrayAdapter<DeviceItem> {
         viewToUse.setTag(holder);
 
         macAddress = (TextView)viewToUse.findViewById(R.id.macAddress);
-        line = (View)viewToUse.findViewById(R.id.line);
+        line = viewToUse.findViewById(R.id.line);
         holder.titleText.setText(item.getDeviceName());
         macAddress.setText(item.getAddress());
 
-        if(item.getDeviceName().toString() == "No Devices")
+        if(item.getDeviceName().equals("No Devices"))
         {
             macAddress.setVisibility(View.INVISIBLE);
             line.setVisibility(View.INVISIBLE);
