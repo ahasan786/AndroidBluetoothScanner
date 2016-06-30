@@ -7,6 +7,7 @@ import java.util.UUID;
  */
 public class DeviceItem {
     private String deviceName;
+    private String nnname;
     private String address;
     private UUID uuid;
     private boolean connected;
