@@ -11,10 +11,10 @@ import java.util.UUID;
  * Created by sharukhhasan on 6/1/16.
  */
 public class ConnectThread extends Thread {
-
     private BluetoothSocket bTSocket;
 
-    public boolean connect(BluetoothDevice bTDevice, UUID mUUID) {
+    public boolean connect(BluetoothDevice bTDevice, UUID mUUID)
+    {
         BluetoothSocket temp = null;
         try {
             temp = bTDevice.createRfcommSocketToServiceRecord(mUUID);
@@ -22,10 +22,12 @@ public class ConnectThread extends Thread {
             Log.d("CONNECTTHREAD","Could not create RFCOMM socket:" + e.toString());
             return false;
         }
+
         try {
             bTSocket.connect();
         } catch(IOException e) {
             Log.d("CONNECTTHREAD","Could not connect: " + e.toString());
+
             try {
                 bTSocket.close();
             } catch(IOException close) {
@@ -36,7 +38,8 @@ public class ConnectThread extends Thread {
         return true;
     }
 
-    public boolean cancel() {
+    public boolean cancel()
+    {
         try {
             bTSocket.close();
         } catch(IOException e) {

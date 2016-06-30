@@ -59,11 +59,6 @@ public class DeviceListFragment extends Fragment implements AbsListView.OnItemCl
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 uuidExtra = intent.getParcelableArrayExtra(BluetoothDevice.EXTRA_UUID);
 
-                if(!uuidExtra.equals(null))
-                {
-                    Log.d(UUIDTAG, uuidExtra.toString());
-                }
-
                 DeviceItem newDevice = new DeviceItem(device.getName(), device.getAddress(), "false");
                 mAdapter.add(newDevice);
                 mAdapter.notifyDataSetChanged();

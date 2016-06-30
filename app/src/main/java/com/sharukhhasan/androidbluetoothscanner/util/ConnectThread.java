@@ -10,11 +10,11 @@ import java.util.UUID;
 /**
  * Created by sharukhhasan on 6/1/16.
  */
-public class Connection extends Thread {
+public class ConnectThread extends Thread {
     private final BluetoothDevice bTDevice;
     private final BluetoothSocket bTSocket;
 
-    public Connection(BluetoothDevice bTDevice, UUID UUID) {
+    public ConnectThread(BluetoothDevice bTDevice, UUID UUID) {
         BluetoothSocket tmp = null;
         this.bTDevice = bTDevice;
 

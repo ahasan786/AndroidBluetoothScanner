@@ -11,26 +11,32 @@ import java.util.UUID;
 /**
  * Created by sharukhhasan on 6/1/16.
  */
-public class ServerConnectThread extends Thread{
+public class ServerConnectThread extends Thread {
     private BluetoothSocket bTSocket;
 
     public ServerConnectThread() { }
 
-    public void acceptConnect(BluetoothAdapter bTAdapter, UUID mUUID) {
+    public void acceptConnect(BluetoothAdapter bTAdapter, UUID mUUID) 
+    {
         BluetoothServerSocket temp = null;
+        
         try {
             temp = bTAdapter.listenUsingRfcommWithServiceRecord("Service_Name", mUUID);
         } catch(IOException e) {
             Log.d("SERVERCONNECT", "Could not get a BluetoothServerSocket:" + e.toString());
         }
-        while(true) {
+        
+        while(true) 
+        {
             try {
                 bTSocket = temp.accept();
             } catch (IOException e) {
                 Log.d("SERVERCONNECT", "Could not accept an incoming connection.");
                 break;
             }
-            if (bTSocket != null) {
+
+            if(bTSocket != null) 
+            {
                 try {
                     temp.close();
                 } catch (IOException e) {
@@ -41,7 +47,8 @@ public class ServerConnectThread extends Thread{
         }
     }
 
-    public void closeConnect() {
+    public void closeConnect() 
+    {
         try {
             bTSocket.close();
         } catch(IOException e) {
